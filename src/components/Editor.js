@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Ffmpeg from 'ffmpeg'
+import {exec} from 'child_process'
 
 export default class Editor extends Component {
 
@@ -60,19 +60,14 @@ export default class Editor extends Component {
 
   generate() {
     console.log('Generating!')
-    try {
-      new Ffmpeg(this.state.videoFilePath, (err, video) => {
-        console.log(video)
-        if (!err) {
-          this.processSegments(video)
-        } else {
-          console.log('Error: ' + err)
-        }
-      })
-    } catch (e) {
-      console.log(e.code)
-      console.log(e.msg)
-    }
+    const videoPath = this.state.videoFilePath
+    console.log(videoPath)
+    const command = `ffmpeg -h`
+    exec(command, (error, stdout, stderr) => {
+      console.log(error)
+      console.log(stderr)
+      console.log(stdout)
+    })
   }
 
   getContents() {
