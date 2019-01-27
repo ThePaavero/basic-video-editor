@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import Ffmpeg from 'ffmpeg'
 
 export default class Editor extends Component {
 
@@ -7,11 +8,16 @@ export default class Editor extends Component {
     this.state = {
       // videoFilePath: null
       videoFilePath: 'C:\\Users\\pekka\\Videos\\Captures\\SJ2D.mp4',
-      segmentsToKeep: []
+      segmentStarts: [],
+      segmentEnds: [],
     }
     this.getVideoFilePathPrompt = this.getVideoFilePathPrompt.bind(this)
     this.getContents = this.getContents.bind(this)
     this.onRecordKeyDown = this.onRecordKeyDown.bind(this)
+    this.onRecordKeyUp = this.onRecordKeyUp.bind(this)
+    this.getVideoElement = this.getVideoElement.bind(this)
+    this.generate = this.generate.bind(this)
+    this.processSegments = this.processSegments.bind(this)
   }
 
   getVideoFilePathPrompt() {
@@ -29,9 +35,44 @@ export default class Editor extends Component {
     )
   }
 
-  onRecordKeyDown(e) {
-    const videoElement = document.getElementById('videoElement')
-    console.log(videoElement)
+  getVideoElement() {
+    return document.getElementById('videoElement')
+  }
+
+  onRecordKeyDown() {
+    const segmentStarts = this.state.segmentStarts
+    segmentStarts.push(this.getVideoElement().currentTime)
+    this.setState({segmentStarts})
+  }
+
+  onRecordKeyUp() {
+    const segmentEnds = this.state.segmentEnds
+    segmentEnds.push(this.getVideoElement().currentTime)
+    this.setState({segmentEnds})
+  }
+
+  processSegments(video) {
+    this.state.segmentStarts.forEach((start, index) => {
+      const matchingEnd = this.state.segmentEnds[index]
+      console.log(start + ' to ' + matchingEnd)
+    })
+  }
+
+  generate() {
+    console.log('Generating!')
+    try {
+      new Ffmpeg(this.state.videoFilePath, (err, video) => {
+        console.log(video)
+        if (!err) {
+          this.processSegments(video)
+        } else {
+          console.log('Error: ' + err)
+        }
+      })
+    } catch (e) {
+      console.log(e.code)
+      console.log(e.msg)
+    }
   }
 
   getContents() {
@@ -42,7 +83,8 @@ export default class Editor extends Component {
     return (
       <div className="masterVideoWrapper">
         <video src={this.state.videoFilePath} controls id="videoElement"/>
-        <button onMouseDown={this.onRecordKeyDown}>Record</button>
+        <button onMouseDown={this.onRecordKeyDown} onMouseUp={this.onRecordKeyUp}>Record</button>
+        <button onClick={this.generate}>Generate new video</button>
       </div>
     )
   }
