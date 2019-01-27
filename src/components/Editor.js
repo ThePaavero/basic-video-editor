@@ -71,18 +71,20 @@ export default class Editor extends Component {
 
     let listString = ''
     tempFilePaths.forEach(segment => {
-      listString += `file '${segment}'` + '\n'
+      listString += `file '${segment.replace('temp/', '')}'` + '\n'
     })
 
     const listPath = 'temp/list.txt'
 
     fs.writeFileSync(listPath, listString)
 
-    setTimeout(() => {
-      tempFilePaths.forEach(tempVideo => {
-        fs.unlinkSync(tempVideo)
-      })
-    }, 5000)
+    execSync(`cd temp`)
+    execSync(`ffmpeg -f concat -safe 0 -i ${listPath} -c copy temp/DONE.mp4`)
+
+    fs.unlinkSync(listPath)
+    tempFilePaths.forEach(tempVideo => {
+      fs.unlinkSync(tempVideo)
+    })
   }
 
   getContents() {
