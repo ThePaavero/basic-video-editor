@@ -28,6 +28,17 @@ body {
   border: solid 10px red;
 }
 
+.App.recording:before {
+  content: "";
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  background-color: red;
+  border-radius: 40px;
+}
+
 .busy {
   position: fixed;
   top: 0;

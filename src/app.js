@@ -22,6 +22,7 @@ export default class App extends Component {
     this.generate = this.generate.bind(this)
     this.generateWrapper = this.generateWrapper.bind(this)
     this.getBusyDimmer = this.getBusyDimmer.bind(this)
+    this.clearAllSegments = this.clearAllSegments.bind(this)
   }
 
   componentDidMount() {
@@ -40,6 +41,11 @@ export default class App extends Component {
         this.setState({busy: false})
       })
     }
+  }
+
+  clearAllSegments() {
+    this.setState({segmentStarts: []})
+    this.setState({segmentEnds: []})
   }
 
   getVideoFilePathPrompt() {
@@ -75,7 +81,6 @@ export default class App extends Component {
 
   generate() {
     this.setState({busy: true})
-    console.log('BUSY')
     const videoPath = this.state.videoFilePath
     let counter = 0
     const tempFilePaths = []
@@ -118,13 +123,13 @@ export default class App extends Component {
       <div className="masterVideoWrapper">
         <video src={this.state.videoFilePath} controls id="videoElement"/>
         <button onMouseDown={this.onRecordKeyDown} onMouseUp={this.onRecordKeyUp}>Record</button>
-        <button onClick={this.generateWrapper}>Generate new video</button>
+        <button onClick={this.clearAllSegments}>Clear all</button>
+        <button onClick={this.generateWrapper}>Done</button>
       </div>
     )
   }
 
   getBusyDimmer() {
-    console.log(this.state)
     if (!this.state.busy) {
       return null
     }
@@ -140,7 +145,6 @@ export default class App extends Component {
         {this.getBusyDimmer()}
         <h2>Video Editor</h2>
         {this.getContents()}
-        {'Busy: ' + JSON.stringify(this.state.busy)}
       </div>
     )
   }
