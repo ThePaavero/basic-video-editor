@@ -6,10 +6,12 @@ export default class Editor extends Component {
     super()
     this.state = {
       // videoFilePath: null
-      videoFilePath: 'C:\\Users\\pekka\\Videos\\Captures\\SJ2D.mp4'
+      videoFilePath: 'C:\\Users\\pekka\\Videos\\Captures\\SJ2D.mp4',
+      segmentsToKeep: []
     }
     this.getVideoFilePathPrompt = this.getVideoFilePathPrompt.bind(this)
     this.getContents = this.getContents.bind(this)
+    this.onRecordKeyDown = this.onRecordKeyDown.bind(this)
   }
 
   getVideoFilePathPrompt() {
@@ -27,6 +29,11 @@ export default class Editor extends Component {
     )
   }
 
+  onRecordKeyDown(e) {
+    const videoElement = document.getElementById('videoElement')
+    console.log(videoElement)
+  }
+
   getContents() {
     if (!this.state.videoFilePath) {
       return this.getVideoFilePathPrompt()
@@ -34,7 +41,8 @@ export default class Editor extends Component {
 
     return (
       <div className="masterVideoWrapper">
-        <video src={this.state.videoFilePath} controls/>
+        <video src={this.state.videoFilePath} controls id="videoElement"/>
+        <button onMouseDown={this.onRecordKeyDown}>Record</button>
       </div>
     )
   }
