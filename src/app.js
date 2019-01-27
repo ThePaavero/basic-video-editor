@@ -20,7 +20,8 @@ export default class App extends Component {
     this.onRecordKeyUp = this.onRecordKeyUp.bind(this)
     this.getVideoElement = this.getVideoElement.bind(this)
     this.generate = this.generate.bind(this)
-    this.getBusy = this.getBusy.bind(this)
+    this.generateWrapper = this.generateWrapper.bind(this)
+    this.getBusyDimmer = this.getBusyDimmer.bind(this)
   }
 
   componentDidMount() {
@@ -30,10 +31,14 @@ export default class App extends Component {
     document.body.ondrop = (e) => {
       const projectStamp = new Date().getTime()
       e.preventDefault()
+      this.setState({busy: true})
       this.setState({videoFilePath: e.dataTransfer.files[0].path})
       this.setState({projectStamp: projectStamp})
       this.setState({segmentStarts: []})
       this.setState({segmentEnds: []})
+      this.getVideoElement().addEventListener('canplay', e => {
+        this.setState({busy: false})
+      })
     }
   }
 
@@ -61,6 +66,11 @@ export default class App extends Component {
     segmentEnds.push(this.getVideoElement().currentTime)
     this.setState({segmentEnds})
     this.setState({recording: false})
+  }
+
+  generateWrapper() {
+    this.setState({busy: true})
+    setTimeout(this.generate, 300)
   }
 
   generate() {
@@ -108,12 +118,13 @@ export default class App extends Component {
       <div className="masterVideoWrapper">
         <video src={this.state.videoFilePath} controls id="videoElement"/>
         <button onMouseDown={this.onRecordKeyDown} onMouseUp={this.onRecordKeyUp}>Record</button>
-        <button onClick={this.generate}>Generate new video</button>
+        <button onClick={this.generateWrapper}>Generate new video</button>
       </div>
     )
   }
 
-  getBusy() {
+  getBusyDimmer() {
+    console.log(this.state)
     if (!this.state.busy) {
       return null
     }
@@ -126,7 +137,7 @@ export default class App extends Component {
   render() {
     return (
       <div className={'App' + (this.state.recording ? ' recording' : '')}>
-        {this.getBusy()}
+        {this.getBusyDimmer()}
         <h2>Video Editor</h2>
         {this.getContents()}
         {'Busy: ' + JSON.stringify(this.state.busy)}
