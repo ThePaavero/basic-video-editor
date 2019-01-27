@@ -7,8 +7,8 @@ export default class Editor extends Component {
   constructor() {
     super()
     this.state = {
-      // videoFilePath: null,
-      videoFilePath: 'C:\\Users\\pekka\\Videos\\Captures\\SJ2D.mp4',
+      videoFilePath: null,
+      // videoFilePath: 'C:\\Users\\pekka\\Videos\\Captures\\SJ2D.mp4',
       segmentStarts: [],
       segmentEnds: [],
     }
@@ -20,17 +20,21 @@ export default class Editor extends Component {
     this.generate = this.generate.bind(this)
   }
 
+  componentDidMount() {
+    document.ondragover = document.ondrop = (ev) => {
+      ev.preventDefault()
+    }
+    document.body.ondrop = (ev) => {
+      console.log(ev.dataTransfer.files[0].path)
+      ev.preventDefault()
+      this.setState({videoFilePath: ev.dataTransfer.files[0].path})
+    }
+  }
+
   getVideoFilePathPrompt() {
     return (
       <div className="setVideoFilePathWrapper">
-        <label>
-          <span>Please enter the path to your video file:</span>
-          <input type="text" onKeyDown={e => {
-            if (e.key === 'Enter') {
-              this.setState({videoFilePath: e.currentTarget.value})
-            }
-          }}/>
-        </label>
+        Drag your file here
       </div>
     )
   }
