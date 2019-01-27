@@ -7,7 +7,7 @@ export default class Editor extends Component {
   constructor() {
     super()
     this.state = {
-      // videoFilePath: null
+      // videoFilePath: null,
       videoFilePath: 'C:\\Users\\pekka\\Videos\\Captures\\SJ2D.mp4',
       segmentStarts: [],
       segmentEnds: [],
@@ -63,7 +63,7 @@ export default class Editor extends Component {
       const end = this.state.segmentEnds[index]
       console.log(start + ' to ' + end)
       const tempFilePath = `temp/tempclip_${counter}.mp4`
-      const command = `ffmpeg -ss ${start} -t ${end} -i ${videoPath} ${tempFilePath}`
+      const command = `ffmpeg -ss ${start} -t ${end} -i "${videoPath}" "${tempFilePath}"`
       execSync(command)
       tempFilePaths.push(tempFilePath)
     })
@@ -94,7 +94,7 @@ export default class Editor extends Component {
 
     return (
       <div className="masterVideoWrapper">
-        <video src={this.state.videoFilePath} controls id="videoElement"/>
+        <video src={this.state.videoFilePath} controls id="videoElement" style={{width: '650px'}}/>
         <button onMouseDown={this.onRecordKeyDown} onMouseUp={this.onRecordKeyUp}>Record</button>
         <button onClick={this.generate}>Generate new video</button>
       </div>
