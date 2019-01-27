@@ -63,7 +63,9 @@ export default class Editor extends Component {
       const end = this.state.segmentEnds[index]
       console.log(start + ' to ' + end)
       const tempFilePath = `temp/tempclip_${counter}.mp4`
-      const command = `ffmpeg -ss ${start} -t ${end} -i "${videoPath}" "${tempFilePath}"`
+      const duration = end - start
+      console.log('duration:', duration)
+      const command = `ffmpeg -ss ${start} -t ${duration} -i "${videoPath}" "${tempFilePath}"`
       execSync(command)
       tempFilePaths.push(tempFilePath)
     })
