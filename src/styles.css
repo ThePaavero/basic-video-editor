@@ -8,6 +8,11 @@ body {
   color: #fff;
 }
 
+button:active,
+button:focus {
+  outline: none;
+}
+
 #videoElement {
   width: 100%;
   margin: 0 auto;
@@ -51,6 +56,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.tools {
+  margin: 20px 0;
+}
+
+.tools button {
+  border-radius: 3px;
+  padding: 10px 20px;
+  margin-right: 10px;
+}
+
+.tools button:last-child {
+  margin-right: 0;
 }
 
 .delete-segment-button {
