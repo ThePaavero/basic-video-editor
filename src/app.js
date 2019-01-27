@@ -28,9 +28,7 @@ export default class App extends Component {
       e.preventDefault()
     }
     document.body.ondrop = (e) => {
-      console.log(e.dataTransfer.files[0].path)
       const projectStamp = new Date().getTime()
-      console.log('projectStamp: ' + projectStamp)
       e.preventDefault()
       this.setState({videoFilePath: e.dataTransfer.files[0].path})
       this.setState({projectStamp: projectStamp})
@@ -67,24 +65,20 @@ export default class App extends Component {
 
   generate() {
     this.setState({busy: true})
-    console.log('Generating!')
+    console.log('BUSY')
     const videoPath = this.state.videoFilePath
-    console.log(videoPath)
     let counter = 0
     const tempFilePaths = []
 
     this.state.segmentStarts.forEach((start, index) => {
       counter++
       const end = this.state.segmentEnds[index]
-      console.log(start + ' to ' + end)
       const tempFilePath = `temp/tempclip_${counter}.mp4`
       const duration = end - start
-      console.log('duration:', duration)
       const command = `ffmpeg -ss ${start} -t ${duration} -i "${videoPath}" "${tempFilePath}"`
       execSync(command)
       tempFilePaths.push(tempFilePath)
     })
-
 
     let listString = ''
     tempFilePaths.forEach(segment => {
@@ -101,8 +95,8 @@ export default class App extends Component {
     fs.unlinkSync(listPath)
     tempFilePaths.forEach(tempVideo => {
       fs.unlinkSync(tempVideo)
-      this.setState({busy: false})
     })
+    this.setState({busy: false})
   }
 
   getContents() {
@@ -135,6 +129,7 @@ export default class App extends Component {
         {this.getBusy()}
         <h2>Video Editor</h2>
         {this.getContents()}
+        {'Busy: ' + JSON.stringify(this.state.busy)}
       </div>
     )
   }
