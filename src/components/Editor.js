@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import {exec} from 'child_process'
+import {execSync} from 'child_process'
+import fs from 'fs'
 
 export default class Editor extends Component {
 
@@ -17,7 +18,6 @@ export default class Editor extends Component {
     this.onRecordKeyUp = this.onRecordKeyUp.bind(this)
     this.getVideoElement = this.getVideoElement.bind(this)
     this.generate = this.generate.bind(this)
-    this.processSegments = this.processSegments.bind(this)
   }
 
   getVideoFilePathPrompt() {
@@ -51,25 +51,28 @@ export default class Editor extends Component {
     this.setState({segmentEnds})
   }
 
-  processSegments(video) {
-    this.state.segmentStarts.forEach((start, index) => {
-      const matchingEnd = this.state.segmentEnds[index]
-      console.log(start + ' to ' + matchingEnd)
-    })
-  }
-
   generate() {
     console.log('Generating!')
     const videoPath = this.state.videoFilePath
     console.log(videoPath)
-    const start = 1
-    const stop = 2
-    const command = `ffmpeg -i ${videoPath} -t ${start} tempclip.mp4 -ss ${stop}`
-    exec(command, (error, stdout, stderr) => {
-      console.log(error)
-      console.log(stderr)
-      console.log(stdout)
+    let counter = 0
+    const tempFilePaths = []
+
+    this.state.segmentStarts.forEach((start, index) => {
+      counter++
+      const end = this.state.segmentEnds[index]
+      console.log(start + ' to ' + end)
+      const tempFilePath = `tempclip_${counter}.mp4`
+      const command = `ffmpeg -ss ${start} -t ${end} -i ${videoPath} ${tempFilePath}`
+      execSync(command)
+      tempFilePaths.push(tempFilePath)
     })
+
+    setTimeout(() => {
+      tempFilePaths.forEach(tempVideo => {
+        fs.unlinkSync(tempVideo)
+      })
+    }, 5000)
   }
 
   getContents() {
