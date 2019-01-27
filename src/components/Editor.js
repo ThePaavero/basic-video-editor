@@ -62,7 +62,9 @@ export default class Editor extends Component {
     console.log('Generating!')
     const videoPath = this.state.videoFilePath
     console.log(videoPath)
-    const command = `ffmpeg -h`
+    const start = 1
+    const stop = 2
+    const command = `ffmpeg -i ${videoPath} -t ${start} tempclip.mp4 -ss ${stop}`
     exec(command, (error, stdout, stderr) => {
       console.log(error)
       console.log(stderr)
