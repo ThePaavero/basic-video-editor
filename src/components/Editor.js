@@ -62,11 +62,21 @@ export default class Editor extends Component {
       counter++
       const end = this.state.segmentEnds[index]
       console.log(start + ' to ' + end)
-      const tempFilePath = `tempclip_${counter}.mp4`
+      const tempFilePath = `temp/tempclip_${counter}.mp4`
       const command = `ffmpeg -ss ${start} -t ${end} -i ${videoPath} ${tempFilePath}`
       execSync(command)
       tempFilePaths.push(tempFilePath)
     })
+
+
+    let listString = ''
+    tempFilePaths.forEach(segment => {
+      listString += `file '${segment}'` + '\n'
+    })
+
+    const listPath = 'temp/list.txt'
+
+    fs.writeFileSync(listPath, listString)
 
     setTimeout(() => {
       tempFilePaths.forEach(tempVideo => {
