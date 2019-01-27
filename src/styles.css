@@ -52,3 +52,9 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.delete-segment-button {
+  border: none;
+  background: none;
+  color: red;
+}

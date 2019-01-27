@@ -23,6 +23,8 @@ export default class App extends Component {
     this.generateWrapper = this.generateWrapper.bind(this)
     this.getBusyDimmer = this.getBusyDimmer.bind(this)
     this.clearAllSegments = this.clearAllSegments.bind(this)
+    this.getRecordedSegments = this.getRecordedSegments.bind(this)
+    this.deleteSegment = this.deleteSegment.bind(this)
   }
 
   componentDidMount() {
@@ -114,6 +116,32 @@ export default class App extends Component {
     this.setState({busy: false})
   }
 
+  deleteSegment(index) {
+    const starts = this.state.segmentStarts
+    const ends = this.state.segmentEnds
+    this.setState({
+      segmentStarts: this.state.segmentStarts.filter((x, i) => i !== index),
+      segmentEnds: this.state.segmentEnds.filter((x, i) => i !== index),
+    })
+  }
+
+  getRecordedSegments() {
+    let counter = 0
+    return this.state.segmentStarts.map((start, index) => {
+      counter++
+      const end = this.state.segmentEnds[index]
+      return (
+        <div className="segment" key={counter}>
+          {counter}. {start}-{end}
+          <button className="delete-segment-button" onClick={() => {
+            this.deleteSegment(index)
+          }}>✖
+          </button>
+        </div>
+      )
+    })
+  }
+
   getContents() {
     if (!this.state.videoFilePath) {
       return this.getVideoFilePathPrompt()
@@ -122,9 +150,12 @@ export default class App extends Component {
     return (
       <div className="masterVideoWrapper">
         <video src={this.state.videoFilePath} controls id="videoElement"/>
-        <button onMouseDown={this.onRecordKeyDown} onMouseUp={this.onRecordKeyUp}>Record</button>
-        <button onClick={this.clearAllSegments}>Clear all</button>
-        <button onClick={this.generateWrapper}>Done</button>
+        <div className="tools">
+          <button onMouseDown={this.onRecordKeyDown} onMouseUp={this.onRecordKeyUp}>Record</button>
+          <button onClick={this.clearAllSegments}>Clear all</button>
+          <button onClick={this.generateWrapper}>Done</button>
+        </div>
+        {this.getRecordedSegments()}
       </div>
     )
   }
