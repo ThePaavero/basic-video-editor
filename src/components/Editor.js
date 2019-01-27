@@ -7,8 +7,8 @@ export default class Editor extends Component {
   constructor() {
     super()
     this.state = {
+      projectStamp: null,
       videoFilePath: null,
-      // videoFilePath: 'C:\\Users\\pekka\\Videos\\Captures\\SJ2D.mp4',
       segmentStarts: [],
       segmentEnds: [],
     }
@@ -21,13 +21,18 @@ export default class Editor extends Component {
   }
 
   componentDidMount() {
-    document.ondragover = document.ondrop = (ev) => {
-      ev.preventDefault()
+    document.ondragover = document.ondrop = (e) => {
+      e.preventDefault()
     }
-    document.body.ondrop = (ev) => {
-      console.log(ev.dataTransfer.files[0].path)
-      ev.preventDefault()
-      this.setState({videoFilePath: ev.dataTransfer.files[0].path})
+    document.body.ondrop = (e) => {
+      console.log(e.dataTransfer.files[0].path)
+      const projectStamp = new Date().getTime()
+      console.log('projectStamp: ' + projectStamp)
+      e.preventDefault()
+      this.setState({videoFilePath: e.dataTransfer.files[0].path})
+      this.setState({projectStamp: projectStamp})
+      this.setState({segmentStarts: []})
+      this.setState({segmentEnds: []})
     }
   }
 
@@ -85,7 +90,7 @@ export default class Editor extends Component {
     fs.writeFileSync(listPath, listString)
 
     execSync(`cd temp`)
-    execSync(`ffmpeg -f concat -safe 0 -i ${listPath} -c copy temp/DONE.mp4`)
+    execSync(`ffmpeg -f concat -safe 0 -i ${listPath} -c copy temp/${this.state.projectStamp}.mp4`)
 
     fs.unlinkSync(listPath)
     tempFilePaths.forEach(tempVideo => {
@@ -100,7 +105,7 @@ export default class Editor extends Component {
 
     return (
       <div className="masterVideoWrapper">
-        <video src={this.state.videoFilePath} controls id="videoElement" style={{width: '650px'}}/>
+        <video src={this.state.videoFilePath} controls id="videoElement"/>
         <button onMouseDown={this.onRecordKeyDown} onMouseUp={this.onRecordKeyUp}>Record</button>
         <button onClick={this.generate}>Generate new video</button>
       </div>

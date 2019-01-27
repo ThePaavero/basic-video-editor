@@ -7,3 +7,9 @@ body {
   background-color: #292929 !important;
   color: #fff;
 }
+
+#videoElement {
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+}
