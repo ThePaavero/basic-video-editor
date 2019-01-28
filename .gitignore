@@ -5,3 +5,4 @@ out
 temp/*.txt
 temp/*.mp4
 temp/*.avi
+src/main.css
