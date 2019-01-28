@@ -132,7 +132,10 @@ export default class App extends Component {
       const end = this.state.segmentEnds[index]
       return (
         <div className="segment" key={counter}>
-          <strong>{counter}.</strong> {start.toFixed(1)} ➜ {end.toFixed(1)}
+          <strong>{counter}.</strong>
+          {start.toFixed(1)}
+          ➜
+          {end ? end.toFixed(1) : ''}
           <button className="delete-segment-button" onClick={() => {
             this.deleteSegment(index)
           }}>✖
