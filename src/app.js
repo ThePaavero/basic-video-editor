@@ -133,9 +133,7 @@ export default class App extends Component {
       return (
         <div className="segment" key={counter}>
           <strong>{counter}.</strong>
-          {start.toFixed(1)}
-          ➜
-          {end ? end.toFixed(1) : ''}
+          {start.toFixed(1)} ➜ {end ? end.toFixed(1) : '...'}
           <button className="delete-segment-button" onClick={() => {
             this.deleteSegment(index)
           }}>✖
