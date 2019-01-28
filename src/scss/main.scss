@@ -17,6 +17,7 @@ button:focus {
   width: 100%;
   margin: 0 auto;
   display: block;
+  max-height: 50vh;
 }
 
 .App {
@@ -27,21 +28,41 @@ button:focus {
   width: 100%;
   height: 100%;
   padding: 40px;
-}
 
-.App.recording {
-  border: solid 10px red;
-}
+  &.recording {
+    border: solid 10px red;
 
-.App.recording:before {
-  content: "";
-  position: fixed;
-  top: 30px;
-  right: 30px;
-  width: 40px;
-  height: 40px;
-  background-color: red;
-  border-radius: 40px;
+    &:before {
+      content: "";
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      width: 40px;
+      height: 40px;
+      background-color: red;
+      border-radius: 40px;
+    }
+  }
+
+  .tools {
+    margin: 20px 0;
+  }
+
+  .tools button {
+    border-radius: 3px;
+    padding: 10px 20px;
+    margin-right: 10px;
+  }
+
+  .tools button:last-child {
+    margin-right: 0;
+  }
+
+  .delete-segment-button {
+    border: none;
+    background: none;
+    color: red;
+  }
 }
 
 .busy {
@@ -56,24 +77,4 @@ button:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.tools {
-  margin: 20px 0;
-}
-
-.tools button {
-  border-radius: 3px;
-  padding: 10px 20px;
-  margin-right: 10px;
-}
-
-.tools button:last-child {
-  margin-right: 0;
-}
-
-.delete-segment-button {
-  border: none;
-  background: none;
-  color: red;
 }
